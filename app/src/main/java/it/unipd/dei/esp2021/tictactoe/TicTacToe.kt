@@ -18,7 +18,8 @@ class TicTacToe(
         arrayOf(0,0,0),
         arrayOf(0,0,0),
         arrayOf(0,0,0)
-    )
+    ),
+    var turn: Int = 0
 ) {
     fun setO(row: Int, col: Int) {
         if (board[row][col] != 0) throw Exception()
@@ -29,6 +30,17 @@ class TicTacToe(
         board[row][col] = 2
     }
 
+    private fun getValueInPosition(row: Int, col: Int): Int {
+        return board[row][col]
+    }
+
+    fun getSymbolInPosition(row: Int, col: Int): String {
+        return when (getValueInPosition(row, col)) {
+            1 -> "O"
+            2 -> "X"
+            else -> ""
+        }
+    }
     /**
      *  Print to Logcat the formatted board. Just for debugging purpose.
      *  @return String, print the board of the game, like this

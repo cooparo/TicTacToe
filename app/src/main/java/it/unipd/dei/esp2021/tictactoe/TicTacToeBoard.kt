@@ -18,43 +18,54 @@ import androidx.compose.ui.unit.dp
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    TicTacToeBoard()
+//    TicTacToeBoard()
 }
 @Composable
-fun TicTacToeBoard() {
+fun TicTacToeBoard(gameState: TicTacToe) {
     Column {
         Row {
-            BoardButton(
-                onClick = {
-
-                }
-            )
-            BoardButton()
-            BoardButton()
+            BoardButton(0,0, gameState)
+            BoardButton(0,1, gameState)
+            BoardButton(0,2, gameState)
         }
         Row {
-            BoardButton()
-            BoardButton()
-            BoardButton()
+            BoardButton(1,0, gameState)
+            BoardButton(1,1, gameState)
+            BoardButton(1,2, gameState)
         }
         Row {
-            BoardButton()
-            BoardButton()
-            BoardButton()
+            BoardButton(2,0, gameState)
+            BoardButton(2,1, gameState)
+            BoardButton(2,2, gameState)
         }
     }
 
 }
 
 @Composable
-fun BoardButton(onClick: (text: String) -> Unit) {
+fun BoardButton(
+    row: Int,
+    col: Int,
+    gameState: TicTacToe,
+    move: (Int,Int) -> Unit = { row: Int, col: Int ->
+        try {
+            if (gameState.turn % 2 == 0) gameState.setO(row, col)
+            else gameState.setX(row, col)
+            println(gameState.printFBoard())
+            gameState.turn++
+        } catch (e: Exception) {
+            e.stackTrace
+        }
+    }
+) {
     Button(
         modifier = Modifier
             .size(100.dp, 100.dp)
             .padding(2.dp),
         shape = RectangleShape,
-        onClick = { onClick }
+        onClick = { move(row, col) }
     ) {
-        Text("")
+        //FIX: doesn't update UI
+        Text(text = gameState.getSymbolInPosition(row,col))
     }
 }
