@@ -1,7 +1,5 @@
 package it.unipd.dei.esp2021.tictactoe
 
-import java.lang.Exception
-
 /**
  *  Every instance of TicTacToe class is a game.
  *  If you live under a rock and you don't know how the game works,
@@ -19,14 +17,15 @@ class TicTacToe(
         arrayOf(0,0,0),
         arrayOf(0,0,0)
     ),
-    var turn: Int = 0
+    var turn: Int = 0,
+    var result: Int = 0
 ) {
     fun setO(row: Int, col: Int) {
-        if (board[row][col] != 0) throw Exception()
+        if (board[row][col] != 0 || XhasWon() || OhasWon()) throw Exception()
         board[row][col] = 1
     }
     fun setX(row: Int, col: Int) {
-        if (board[row][col] != 0) throw Exception()
+        if (board[row][col] != 0 || XhasWon() || OhasWon()) throw Exception()
         board[row][col] = 2
     }
 
@@ -83,12 +82,10 @@ class TicTacToe(
      * - 2, if X (Crosses) wins
      * - 3, for a draw
      */
-    fun result(): Int {
-        if (isBoardFull() && !XhasWon() && !OhasWon()) return 3 //draw
-        if (OhasWon()) return 1
-        if (XhasWon()) return 2
-
-        return 0
+    fun checkResult() {
+        if (isBoardFull() && !XhasWon() && !OhasWon()) result = 3 //draw
+        if (OhasWon()) result = 1
+        if (XhasWon()) result = 2
     }
 
     /**
