@@ -1,4 +1,4 @@
-package it.unipd.dei.esp2021.tictactoe.view
+package it.unipd.dei.esp2021.tictactoe.presentation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -18,10 +18,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.viewModelFactory
+import it.unipd.dei.esp2021.tictactoe.domain.model.Symbol
 
 @Preview(showBackground = true)
 @Composable
 fun GameScreen() {
+
+    val gameViewModel = GameViewModel()
 
     Column(
         modifier = Modifier
@@ -42,7 +48,7 @@ fun GameScreen() {
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            Board()
+            Board(gameViewModel)
         }
         Row(
             modifier = Modifier
@@ -65,13 +71,14 @@ fun BackButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun Board() {
+private fun Board(gameViewModel: GameViewModel) {
     Column {
         for (row in 0..2) {
             Row {
                 for (col in 0..2) {
-                    BoardButton {
-                        //TODO
+                    val symbol: String = gameViewModel.gameState.getBoardSymbol(row, col)
+                    BoardButton(symbol) {
+                        gameViewModel.setBoardButton(row, col)
                     }
                 }
             }
@@ -80,7 +87,7 @@ private fun Board() {
 }
 
 @Composable
-private fun BoardButton(onClick: () -> Unit){
+private fun BoardButton(symbol: String, onClick: () -> Unit){
     Button(
         modifier = Modifier
             .size(110.dp)
@@ -92,7 +99,8 @@ private fun BoardButton(onClick: () -> Unit){
     ) {
         Text(
             color = Color.Black,
-            text = ""
+            text = symbol,
+            fontSize = 40.sp
         )
     }
 }
