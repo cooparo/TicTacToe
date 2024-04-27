@@ -5,5 +5,7 @@ enum class Result {
     RESULT_ONGOING,
     RESULT_PLAYER_X,
     RESULT_PLAYER_O,
-    RESULT_DRAW
+    RESULT_DRAW;
+
+    fun isEnded() = this == RESULT_DRAW || this == RESULT_PLAYER_O || this == RESULT_PLAYER_X
 }
