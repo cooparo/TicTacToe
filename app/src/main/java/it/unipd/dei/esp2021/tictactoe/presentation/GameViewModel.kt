@@ -1,6 +1,5 @@
 package it.unipd.dei.esp2021.tictactoe.presentation
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import it.unipd.dei.esp2021.tictactoe.domain.model.Box
 import it.unipd.dei.esp2021.tictactoe.domain.model.Game
@@ -13,11 +12,33 @@ import kotlinx.coroutines.flow.update
 
 class GameViewModel : ViewModel() {
 
+
+
     private val _gameState = MutableStateFlow(Game())
     val gameState: StateFlow<Game> = _gameState.asStateFlow()
 
-    private val board: MutableLiveData<MutableList<MutableList<Box>>> by lazy {
-        MutableLiveData<MutableList<MutableList<Box>>>()
+    private val _board = MutableStateFlow(mutableListOf(mutableListOf(Box())))
+    val board: StateFlow<MutableList<MutableList<Box>>> = _board.asStateFlow()
+
+    init {
+        this.initGame()
+    }
+    fun initGame() {
+        var row: Int = 0
+        var column: Int = 0
+
+        _board.value = MutableList(3) {
+            column = 0
+
+            MutableList(3) {
+                Box(
+                    row = row++ / 3,
+                    column = column++
+                )
+            }
+        }
+
+        _gameState.value = Game()
     }
 
     fun onClickBox(box: Box) {
@@ -27,7 +48,7 @@ class GameViewModel : ViewModel() {
 
         if (isEmpty && !_gameState.value.result.isEnded()) {
 
-            board.value?.get(box.row)!!.get(box.column).symbol = currentPlayer
+            board.value[box.row][box.column].symbol = currentPlayer
 
             _gameState.update { currentGame ->
                 currentGame.copy(
@@ -55,22 +76,19 @@ class GameViewModel : ViewModel() {
 
         val board = this.board.value
         // Check all rows
-//        for (row in this.board.value) {
-//            if (row[0] == symbol && row[1] == symbol && row[2] == symbol) return true
-//        }
         for (i in 0..2) {
-            val row = board?.get(i)!!
+            val row = board[i]
             if (row[0].symbol == symbol && row[1].symbol == symbol && row[2].symbol == symbol) return true
         }
 
         // Check all columns
         for (i in 0..2) {
-            if (board!![0][i].symbol == symbol && board[1][i].symbol == symbol && board[2][i].symbol == symbol) return true
+            if (board[0][i].symbol == symbol && board[1][i].symbol == symbol && board[2][i].symbol == symbol) return true
         }
 
         // Check diagonals
         if (
-            (board!![0][0].symbol == symbol && board[1][1].symbol == symbol && board[2][2].symbol == symbol) ||
+            (board[0][0].symbol == symbol && board[1][1].symbol == symbol && board[2][2].symbol == symbol) ||
             (board[0][2].symbol == symbol && board[1][1].symbol == symbol && board[2][0].symbol == symbol)
         ) return true
 
@@ -78,7 +96,7 @@ class GameViewModel : ViewModel() {
     }
 
     private fun isBoardEmpty(): Boolean {
-        for (row in board.value!!) {
+        for (row in board.value) {
             for (box in row) {
                 if (box.symbol != Symbol.SYMBOL_EMPTY) return false
             }
@@ -87,7 +105,7 @@ class GameViewModel : ViewModel() {
     }
 
     private fun isBoardFull(): Boolean {
-        for (row in board.value!!) {
+        for (row in board.value) {
             for (box in row) {
                 if (box.symbol == Symbol.SYMBOL_EMPTY) return false
             }

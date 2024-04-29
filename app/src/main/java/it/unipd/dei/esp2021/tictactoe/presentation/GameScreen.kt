@@ -14,20 +14,22 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.viewModelFactory
-import it.unipd.dei.esp2021.tictactoe.domain.model.Symbol
+import it.unipd.dei.esp2021.tictactoe.domain.model.Box
+import it.unipd.dei.esp2021.tictactoe.domain.model.Game
+import it.unipd.dei.esp2021.tictactoe.domain.model.Result
 
 @Preview(showBackground = true)
 @Composable
-fun GameScreen() {
-
-    val gameViewModel = GameViewModel()
+fun GameScreen(
+    viewModel: GameViewModel = GameViewModel()
+) {
 
     Column(
         modifier = Modifier
@@ -39,7 +41,7 @@ fun GameScreen() {
                 .fillMaxWidth()
                 .padding(6.dp)
         ) {
-            BackButton{
+            BackButton {
                 //TODO
             }
         }
@@ -48,7 +50,7 @@ fun GameScreen() {
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            Board(gameViewModel)
+            Board(viewModel)
         }
         Row(
             modifier = Modifier
@@ -56,8 +58,11 @@ fun GameScreen() {
                 .padding(6.dp),
             horizontalArrangement = Arrangement.End
         ) {
-            RestartGameButton {
-                //TODO
+            val gameIsEnded: Boolean = viewModel.gameState.collectAsState().value.result.isEnded()
+            if (gameIsEnded) {
+                RestartGameButton {
+                    viewModel.initGame()
+                }
             }
         }
     }
@@ -71,23 +76,36 @@ fun BackButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun Board(gameViewModel: GameViewModel) {
+private fun Board(viewModel: GameViewModel) {
+    val board: State<MutableList<MutableList<Box>>> = viewModel.board.collectAsState()
+    val currentGame: State<Game> = viewModel.gameState.collectAsState()
+    val result: Result = currentGame.value.result
+
     Column {
-        for (row in 0..2) {
+        board.value.forEach { row ->
             Row {
-                for (col in 0..2) {
-                    val symbol: String = gameViewModel.gameState.getBoardSymbol(row, col)
-                    BoardButton(symbol) {
-                        gameViewModel.setBoardButton(row, col)
+                row.forEach { box ->
+                    BoardButton(box) {
+                        viewModel.onClickBox(box)
                     }
                 }
             }
+        }
+        if (result.isEnded()) {
+            val winnerPlayer = when (result) {
+                Result.RESULT_PLAYER_X -> "Player X"
+                Result.RESULT_PLAYER_O -> "Player O"
+                Result.RESULT_DRAW -> "Draw, nobody"
+                else -> "You broke the game :)"
+            }
+            Text(text = "$winnerPlayer won!")
         }
     }
 }
 
 @Composable
-private fun BoardButton(symbol: String, onClick: () -> Unit){
+private fun BoardButton(box: Box, onClick: () -> Unit) {
+
     Button(
         modifier = Modifier
             .size(110.dp)
@@ -99,15 +117,16 @@ private fun BoardButton(symbol: String, onClick: () -> Unit){
     ) {
         Text(
             color = Color.Black,
-            text = symbol,
+            text = box.getSymbol(),
             fontSize = 40.sp
         )
     }
 }
 
+
 @Composable
 private fun RestartGameButton(onClick: () -> Unit) {
-    OutlinedButton(onClick = onClick) {
+    Button(onClick = onClick) {
         Text(text = "Restart")
     }
 }
