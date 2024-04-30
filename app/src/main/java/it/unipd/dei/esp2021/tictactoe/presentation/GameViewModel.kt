@@ -1,18 +1,22 @@
 package it.unipd.dei.esp2021.tictactoe.presentation
 
 import androidx.lifecycle.ViewModel
-import it.unipd.dei.esp2021.tictactoe.domain.model.Box
-import it.unipd.dei.esp2021.tictactoe.domain.model.Game
-import it.unipd.dei.esp2021.tictactoe.domain.model.Result
-import it.unipd.dei.esp2021.tictactoe.domain.model.Symbol
+import androidx.lifecycle.viewModelScope
+import it.unipd.dei.esp2021.tictactoe.data.GameRepository
+import it.unipd.dei.esp2021.tictactoe.model.Box
+import it.unipd.dei.esp2021.tictactoe.model.Game
+import it.unipd.dei.esp2021.tictactoe.model.Result
+import it.unipd.dei.esp2021.tictactoe.model.Symbol
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class GameViewModel : ViewModel() {
-
-
+class GameViewModel(
+    private val repository: GameRepository
+) : ViewModel() {
 
     private val _gameState = MutableStateFlow(Game())
     val gameState: StateFlow<Game> = _gameState.asStateFlow()
@@ -20,12 +24,15 @@ class GameViewModel : ViewModel() {
     private val _board = MutableStateFlow(mutableListOf(mutableListOf(Box())))
     val board: StateFlow<MutableList<MutableList<Box>>> = _board.asStateFlow()
 
+    val gamesList: Flow<List<Game>> = repository.getGames()
+
     init {
         this.initGame()
     }
+
     fun initGame() {
-        var row: Int = 0
-        var column: Int = 0
+        var row = 0
+        var column = 0
 
         _board.value = MutableList(3) {
             column = 0
@@ -59,6 +66,14 @@ class GameViewModel : ViewModel() {
             }
         }
     }
+
+    fun onEndGame(game: Game) {
+        viewModelScope.launch {
+            repository.addGame(game)
+        }
+    }
+
+    fun getGame(): Game = _gameState.value
 
     private fun checkResult(): Result {
         val XhasWon = symbolHasWon(Symbol.SYMBOL_CROSS)

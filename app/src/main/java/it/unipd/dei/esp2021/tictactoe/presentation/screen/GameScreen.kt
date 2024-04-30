@@ -18,20 +18,20 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import it.unipd.dei.esp2021.tictactoe.domain.model.Box
-import it.unipd.dei.esp2021.tictactoe.domain.model.Game
-import it.unipd.dei.esp2021.tictactoe.domain.model.Result
+import it.unipd.dei.esp2021.tictactoe.model.Box
+import it.unipd.dei.esp2021.tictactoe.model.Game
+import it.unipd.dei.esp2021.tictactoe.model.Result
 import it.unipd.dei.esp2021.tictactoe.presentation.GameViewModel
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun GameScreen(
-    viewModel: GameViewModel = GameViewModel(),
+    viewModel: GameViewModel,
     onNavigateToHome: () -> Unit = {}
 ) {
+    val currentGame: Game = viewModel.gameState.collectAsState().value
 
     Column(
         modifier = Modifier
@@ -58,8 +58,9 @@ fun GameScreen(
                 .padding(6.dp),
             horizontalArrangement = Arrangement.End
         ) {
-            val gameIsEnded: Boolean = viewModel.gameState.collectAsState().value.result.isEnded()
+            val gameIsEnded: Boolean = currentGame.result.isEnded()
             if (gameIsEnded) {
+                viewModel.onEndGame(game = currentGame)
                 RestartGameButton {
                     viewModel.initGame()
                 }

@@ -1,4 +1,4 @@
-package it.unipd.dei.esp2021.tictactoe.domain.model
+package it.unipd.dei.esp2021.tictactoe.model
 
 enum class Result {
     RESULT_NEW_GAME,

@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import it.unipd.dei.esp2021.tictactoe.domain.model.Screen
+import it.unipd.dei.esp2021.tictactoe.model.Screen
 import it.unipd.dei.esp2021.tictactoe.presentation.screen.GameScreen
 import it.unipd.dei.esp2021.tictactoe.presentation.screen.HomeScreen
 import it.unipd.dei.esp2021.tictactoe.presentation.screen.StatsScreen
