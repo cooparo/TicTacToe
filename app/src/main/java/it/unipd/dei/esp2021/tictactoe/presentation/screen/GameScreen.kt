@@ -1,4 +1,4 @@
-package it.unipd.dei.esp2021.tictactoe.presentation
+package it.unipd.dei.esp2021.tictactoe.presentation.screen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -24,11 +24,13 @@ import androidx.compose.ui.unit.sp
 import it.unipd.dei.esp2021.tictactoe.domain.model.Box
 import it.unipd.dei.esp2021.tictactoe.domain.model.Game
 import it.unipd.dei.esp2021.tictactoe.domain.model.Result
+import it.unipd.dei.esp2021.tictactoe.presentation.GameViewModel
 
 @Preview(showBackground = true)
 @Composable
 fun GameScreen(
-    viewModel: GameViewModel = GameViewModel()
+    viewModel: GameViewModel = GameViewModel(),
+    onNavigateToHome: () -> Unit = {}
 ) {
 
     Column(
@@ -41,9 +43,7 @@ fun GameScreen(
                 .fillMaxWidth()
                 .padding(6.dp)
         ) {
-            BackButton {
-                //TODO
-            }
+            BackButton(onClick = onNavigateToHome)
         }
         Row(
             modifier = Modifier
