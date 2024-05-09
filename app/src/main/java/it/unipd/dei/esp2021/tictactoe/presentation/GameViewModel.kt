@@ -1,5 +1,6 @@
 package it.unipd.dei.esp2021.tictactoe.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import it.unipd.dei.esp2021.tictactoe.data.GameRepository
@@ -24,7 +25,8 @@ class GameViewModel(
     private val _board = MutableStateFlow(mutableListOf(mutableListOf(Box())))
     val board: StateFlow<MutableList<MutableList<Box>>> = _board.asStateFlow()
 
-    val gamesList: Flow<List<Game>> = repository.getGames()
+    private var _gamesList = repository.allGames()
+    val gamesList: Flow<List<Game>> = _gamesList
 
     init {
         this.initGame()
@@ -67,13 +69,9 @@ class GameViewModel(
         }
     }
 
-    fun onEndGame(game: Game) {
-        viewModelScope.launch {
-            repository.addGame(game)
-        }
+    fun onEndGame(game: Game) = viewModelScope.launch {
+        repository.insert(game)
     }
-
-    fun getGame(): Game = _gameState.value
 
     private fun checkResult(): Result {
         val XhasWon = symbolHasWon(Symbol.SYMBOL_CROSS)

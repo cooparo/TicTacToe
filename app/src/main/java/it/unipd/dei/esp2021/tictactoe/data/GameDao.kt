@@ -15,10 +15,10 @@ interface GameDao {
     suspend fun insertAll(vararg games: Game)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGame(game: Game)
+    suspend fun insert(game: Game)
 
     @Delete
-    suspend fun deleteGame(game: Game)
+    suspend fun delete(game: Game)
 
     @Query("SELECT * FROM games")
     fun getAll(): Flow<List<Game>>

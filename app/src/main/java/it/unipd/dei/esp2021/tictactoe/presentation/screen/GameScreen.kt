@@ -32,6 +32,9 @@ fun GameScreen(
     onNavigateToHome: () -> Unit = {}
 ) {
     val currentGame: Game = viewModel.gameState.collectAsState().value
+    val gameIsEnded: Boolean = currentGame.result.isEnded()
+
+    if (gameIsEnded) viewModel.onEndGame(currentGame) // When game is ended it adds game to DB
 
     Column(
         modifier = Modifier
@@ -58,7 +61,6 @@ fun GameScreen(
                 .padding(6.dp),
             horizontalArrangement = Arrangement.End
         ) {
-            val gameIsEnded: Boolean = currentGame.result.isEnded()
             if (gameIsEnded) {
                 viewModel.onEndGame(game = currentGame)
                 RestartGameButton {

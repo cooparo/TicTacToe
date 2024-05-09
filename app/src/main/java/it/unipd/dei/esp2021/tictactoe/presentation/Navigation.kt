@@ -1,6 +1,7 @@
 package it.unipd.dei.esp2021.tictactoe.presentation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,7 +15,7 @@ import it.unipd.dei.esp2021.tictactoe.presentation.screen.StatsScreen
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
-    viewModel: GameViewModel = GameViewModel(),
+    viewModel: GameViewModel,
     navController: NavHostController = rememberNavController(),
     startDestination: String = Screen.HomeScreen.route
 ) {
@@ -32,12 +33,18 @@ fun AppNavHost(
         composable(route = Screen.GameScreen.route) {
             GameScreen(
                 viewModel = viewModel,
-                onNavigateToHome = { navController.popBackStack() }
+                onNavigateToHome = {
+                    viewModel.initGame()
+                    navController.popBackStack()
+                }
             )
         }
         composable(route = Screen.StatsScreen.route) {
+            val gameList = viewModel.gamesList.collectAsState(initial = emptyList()).value
+
             StatsScreen(
-                onNavigateToHome = { navController.popBackStack() }
+                onNavigateToHome = { navController.popBackStack() },
+                gameList = gameList
             )
         }
     }
