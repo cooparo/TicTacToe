@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import it.unipd.dei.esp2021.tictactoe.model.Box
 import it.unipd.dei.esp2021.tictactoe.model.Game
 import it.unipd.dei.esp2021.tictactoe.model.Result
+import it.unipd.dei.esp2021.tictactoe.model.Symbol
 import it.unipd.dei.esp2021.tictactoe.presentation.GameViewModel
 
 //@Preview(showBackground = true)
@@ -82,14 +83,16 @@ fun BackButton(onClick: () -> Unit) {
 private fun Board(viewModel: GameViewModel) {
     val board: State<MutableList<MutableList<Box>>> = viewModel.board.collectAsState()
     val currentGame: State<Game> = viewModel.gameState.collectAsState()
+    val currentPlayer = currentGame.value.currentPlayer
     val result: Result = currentGame.value.result
 
+    if (currentPlayer == Symbol.SYMBOL_NOUGHT) viewModel.computerMove()
     Column {
         board.value.forEach { row ->
             Row {
                 row.forEach { box ->
                     BoardButton(box) {
-                        viewModel.onClickBox(box)
+                        if (currentPlayer == Symbol.SYMBOL_CROSS) viewModel.onClickBox(box)
                     }
                 }
             }

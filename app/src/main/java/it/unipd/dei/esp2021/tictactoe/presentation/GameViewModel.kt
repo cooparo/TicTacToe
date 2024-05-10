@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class GameViewModel(
     private val repository: GameRepository
@@ -67,6 +68,24 @@ class GameViewModel(
                 )
             }
         }
+    }
+
+    fun computerMove() {
+        var randomEmptyBox: Box = Box()
+        var isFound: Boolean = false
+
+        while (!isFound) {
+            val randRow: Int= Random.nextInt(0,3)
+            val randCol: Int = Random.nextInt(0,3)
+
+            val box = board.value[randRow][randCol]
+            if (box.symbol == Symbol.SYMBOL_EMPTY) {
+                randomEmptyBox = box
+                isFound = true
+            }
+        }
+
+        onClickBox(randomEmptyBox)
     }
 
     fun onEndGame(game: Game) = viewModelScope.launch {
