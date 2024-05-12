@@ -2,10 +2,14 @@ package it.unipd.dei.esp2021.tictactoe.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// Gruvbox theme
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val background = Color(0xFF282828)
+val alt_background = Color(0xFF3c3836)
+
+val green = Color(0xFF98971a)
+val yellow = Color(0xFFd79921)
+val red = Color(0xFFcc241d)
+val blue = Color(0xFF458588)
+val aqua = Color(0xFF689d6a)
+val purple = Color(0xFFb16286)

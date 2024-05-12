@@ -23,6 +23,6 @@ interface GameDao {
     @Query("SELECT * FROM games")
     fun getAll(): Flow<List<Game>>
 
-    @Query("SELECT * FROM games ORDER BY date DESC")
+    @Query("SELECT * FROM games ORDER BY date DESC LIMIT 20")
     fun getGameOrderedByDate(): Flow<List<Game>>
 }

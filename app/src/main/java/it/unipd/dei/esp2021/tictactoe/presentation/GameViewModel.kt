@@ -26,7 +26,7 @@ class GameViewModel(
     private val _board = MutableStateFlow(mutableListOf(mutableListOf(Box())))
     val board: StateFlow<MutableList<MutableList<Box>>> = _board.asStateFlow()
 
-    private var _gamesList = repository.allGames()
+    private var _gamesList = repository.allGamesOrderedByDate()
     val gamesList: Flow<List<Game>> = _gamesList
 
     init {
