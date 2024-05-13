@@ -13,13 +13,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.unipd.dei.esp2021.tictactoe.model.Box
@@ -35,15 +33,11 @@ fun GameScreen(
     viewModel: GameViewModel,
     onNavigateToHome: () -> Unit = {}
 ) {
-    val currentGame: Game = viewModel.gameState.collectAsState().value
-    val gameIsEnded: Boolean = currentGame.result.isEnded()
-
-    if (gameIsEnded) viewModel.onEndGame(currentGame) // When game is ended it adds game to DB
     val windowInfo = rememberWindowInfo()
 
-    if( windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ) {
+    if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact) {
         VerticalLayout(viewModel = viewModel, onNavigateToHome = onNavigateToHome)
-    } else if ( windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact ) {
+    } else if (windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact) {
         HorizontalLayout(viewModel = viewModel, onNavigateToHome = onNavigateToHome)
     } else {
         // TODO: big boy (e.g. tablet, ... )
@@ -92,7 +86,8 @@ private fun Board(viewModel: GameViewModel) {
 @Composable
 private fun BoardButton(result: Result, box: Box, onClick: () -> Unit) {
     var isModified = box.symbol != Symbol.SYMBOL_EMPTY
-    isModified = if ( result.isEnded() ) true else isModified // If the game is ended disable all buttons
+    isModified =
+        if (result.isEnded()) true else isModified // If the game is ended disable all buttons
 
     Button(
         modifier = Modifier
@@ -122,8 +117,8 @@ private fun RestartGameButton(onClick: () -> Unit) {
 
 @Composable
 private fun VerticalLayout(
-   viewModel: GameViewModel,
-   onNavigateToHome: () -> Unit
+    viewModel: GameViewModel,
+    onNavigateToHome: () -> Unit
 ) {
     val currentGame: Game = viewModel.gameState.collectAsState().value
     val gameIsEnded: Boolean = currentGame.result.isEnded()
@@ -154,7 +149,6 @@ private fun VerticalLayout(
             horizontalArrangement = Arrangement.End
         ) {
             if (gameIsEnded) {
-                viewModel.onEndGame(game = currentGame)
                 RestartGameButton {
                     viewModel.initGame()
                 }

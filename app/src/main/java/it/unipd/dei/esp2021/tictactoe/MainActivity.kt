@@ -13,7 +13,7 @@ import it.unipd.dei.esp2021.tictactoe.presentation.GameViewModelFactory
 class MainActivity : ComponentActivity() {
 
     private val gameViewModel: GameViewModel by viewModels {
-        GameViewModelFactory(GameRepository(GameDatabase.getDatabase(this).dao))
+        GameViewModelFactory(GameRepository.getInstance(GameDatabase.getDatabase(this).dao))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

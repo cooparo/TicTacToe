@@ -35,7 +35,7 @@ class GameViewModel(
 
     fun initGame() {
         var row = 0
-        var column = 0
+        var column: Int
 
         _board.value = MutableList(3) {
             column = 0
@@ -67,28 +67,31 @@ class GameViewModel(
                     result = checkResult()
                 )
             }
+            if (_gameState.value.result.isEnded()) onEndGame(_gameState.value)
         }
     }
 
     fun computerMove() = viewModelScope.launch {
-        var randomEmptyBox: Box = Box()
-        var isFound: Boolean = false
+        if (!_gameState.value.result.isEnded()) {
+            var randomEmptyBox = Box()
+            var isFound = false
 
-        while (!isFound) {
-            val randRow: Int = Random.nextInt(0, 3)
-            val randCol: Int = Random.nextInt(0, 3)
+            while (!isFound) {
+                val randRow: Int = Random.nextInt(0, 3)
+                val randCol: Int = Random.nextInt(0, 3)
 
-            val box = board.value[randRow][randCol]
-            if (box.symbol == Symbol.SYMBOL_EMPTY) {
-                randomEmptyBox = box
-                isFound = true
+                val box = board.value[randRow][randCol]
+                if (box.symbol == Symbol.SYMBOL_EMPTY) {
+                    randomEmptyBox = box
+                    isFound = true
+                }
             }
-        }
 
-        onClickBox(randomEmptyBox)
+            onClickBox(randomEmptyBox)
+        }
     }
 
-    fun onEndGame(game: Game) = viewModelScope.launch {
+    private fun onEndGame(game: Game) = viewModelScope.launch {
         repository.insert(game)
     }
 
@@ -97,6 +100,7 @@ class GameViewModel(
         gamesList = _gamesList
     }
 
+    @Suppress("LocalVariableName")
     private fun checkResult(): Result {
         val XhasWon = symbolHasWon(Symbol.SYMBOL_CROSS)
         val OhasWon = symbolHasWon(Symbol.SYMBOL_NOUGHT)
@@ -124,12 +128,8 @@ class GameViewModel(
         }
 
         // Check diagonals
-        if (
-            (board[0][0].symbol == symbol && board[1][1].symbol == symbol && board[2][2].symbol == symbol) ||
-            (board[0][2].symbol == symbol && board[1][1].symbol == symbol && board[2][0].symbol == symbol)
-        ) return true
-
-        return false
+        return (board[0][0].symbol == symbol && board[1][1].symbol == symbol && board[2][2].symbol == symbol) ||
+                (board[0][2].symbol == symbol && board[1][1].symbol == symbol && board[2][0].symbol == symbol)
     }
 
     private fun isBoardEmpty(): Boolean {
