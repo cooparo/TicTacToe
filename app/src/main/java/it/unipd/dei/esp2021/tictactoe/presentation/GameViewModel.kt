@@ -1,6 +1,5 @@
 package it.unipd.dei.esp2021.tictactoe.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import it.unipd.dei.esp2021.tictactoe.data.GameRepository
@@ -26,11 +25,12 @@ class GameViewModel(
     private val _board = MutableStateFlow(mutableListOf(mutableListOf(Box())))
     val board: StateFlow<MutableList<MutableList<Box>>> = _board.asStateFlow()
 
-    private var _gamesList = repository.allGamesOrderedByDate()
-    val gamesList: Flow<List<Game>> = _gamesList
+    private lateinit var _gamesList: Flow<List<Game>>
+    lateinit var gamesList: Flow<List<Game>>
 
     init {
         this.initGame()
+        this.getGamesList()
     }
 
     fun initGame() {
@@ -51,7 +51,7 @@ class GameViewModel(
         _gameState.value = Game()
     }
 
-    fun onClickBox(box: Box) {
+    fun onClickBox(box: Box) = viewModelScope.launch {
         val currentPlayer: Symbol = _gameState.value.currentPlayer
         val turn: Int = _gameState.value.turn
         val isEmpty: Boolean = box.symbol == Symbol.SYMBOL_EMPTY
@@ -70,13 +70,13 @@ class GameViewModel(
         }
     }
 
-    fun computerMove() {
+    fun computerMove() = viewModelScope.launch {
         var randomEmptyBox: Box = Box()
         var isFound: Boolean = false
 
         while (!isFound) {
-            val randRow: Int= Random.nextInt(0,3)
-            val randCol: Int = Random.nextInt(0,3)
+            val randRow: Int = Random.nextInt(0, 3)
+            val randCol: Int = Random.nextInt(0, 3)
 
             val box = board.value[randRow][randCol]
             if (box.symbol == Symbol.SYMBOL_EMPTY) {
@@ -90,6 +90,11 @@ class GameViewModel(
 
     fun onEndGame(game: Game) = viewModelScope.launch {
         repository.insert(game)
+    }
+
+    private fun getGamesList() = viewModelScope.launch {
+        _gamesList = repository.allGamesOrderedByDate()
+        gamesList = _gamesList
     }
 
     private fun checkResult(): Result {

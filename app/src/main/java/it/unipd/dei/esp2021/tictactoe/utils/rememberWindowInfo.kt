@@ -10,8 +10,8 @@ fun rememberWindowInfo(): WindowInfo {
     val configuration = LocalConfiguration.current
     return WindowInfo(
         screenWidthInfo = when {
-            configuration.screenWidthDp  < 600 -> WindowInfo.WindowType.Compact
-            configuration.screenWidthDp  < 840 -> WindowInfo.WindowType.Medium
+            configuration.screenWidthDp < 600 -> WindowInfo.WindowType.Compact
+            configuration.screenWidthDp < 840 -> WindowInfo.WindowType.Medium
             else -> WindowInfo.WindowType.Expanded
         },
         screenHeightInfo = when {
@@ -24,15 +24,15 @@ fun rememberWindowInfo(): WindowInfo {
     )
 }
 
-data class WindowInfo (
+data class WindowInfo(
     val screenWidthInfo: WindowType,
     val screenHeightInfo: WindowType,
     val screenWidth: Dp,
     val screenHeight: Dp
-){
+) {
     sealed class WindowType {
-        object Compact: WindowType()
-        object Medium: WindowType()
-        object Expanded: WindowType()
+        data object Compact : WindowType()
+        data object Medium : WindowType()
+        data object Expanded : WindowType()
     }
 }

@@ -11,7 +11,7 @@ class GameViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GameViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return GameViewModel(gameRepository) as T
+            return GameViewModel(repository = gameRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
