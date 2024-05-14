@@ -44,6 +44,7 @@ fun AppNavHost(
 
             StatsScreen(
                 onNavigateToHome = { navController.popBackStack() },
+                onNavigateToGame = { navController.navigate(Screen.GameScreen.route) },
                 gameList = gameList
             )
         }

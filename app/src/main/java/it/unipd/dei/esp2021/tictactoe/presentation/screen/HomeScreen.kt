@@ -8,14 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,57 +40,76 @@ fun HomeScreen(
         color = background
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(32.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            ElevatedButton(
-                onClick = onNavigateToGame,
+            HomeTitle()
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp),
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = blue)
+                    .padding(horizontal = 32.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_play_arrow_24),
-                    contentDescription = "Play",
-                    tint = Color.White,
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
+                NavigationButton(
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                    onClick = onNavigateToGame,
                     text = "PLAY",
-                    fontSize = 18.sp,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
+                    color = blue,
+                    icon = R.drawable.baseline_play_arrow_24
                 )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            ElevatedButton(
-                onClick = onNavigateToStats,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp),
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = green)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_bar_chart_24),
-                    contentDescription = "Stats",
-                    tint = Color.White,
-                    modifier = Modifier.size(24.dp),
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
+                Spacer(modifier = Modifier.height(16.dp))
+                NavigationButton(
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                    onClick = onNavigateToStats,
                     text = "STATS",
-                    fontSize = 18.sp,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
+                    color = green,
+                    icon = R.drawable.baseline_bar_chart_24
                 )
             }
         }
     }
+}
+
+@Composable
+fun NavigationButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    text: String = "",
+    color: Color = blue,
+    icon: Int = R.drawable.ic_launcher_foreground,
+    isEnabled: Boolean = true
+) {
+    val enabledColor = if (isEnabled) Color.White else Color.Gray
+    ElevatedButton(
+        onClick = onClick,
+        modifier = modifier
+            .height(60.dp),
+        shape = RoundedCornerShape(10.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = color),
+        enabled = isEnabled,
+    ) {
+        Icon(
+            painter = painterResource(id = icon),
+            contentDescription = text,
+            tint = enabledColor,
+            modifier = Modifier.size(24.dp),
+        )
+        Text(
+            text = text,
+            fontSize = 18.sp,
+            color = enabledColor,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun HomeTitle() {
+    Text(
+        text = "TicTacToe",
+        fontSize = 60.sp,
+        color = Color.White,
+        fontWeight = FontWeight.Bold,
+        fontFamily = FontFamily.Cursive,
+    )
 }
