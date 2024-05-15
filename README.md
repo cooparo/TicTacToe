@@ -1,4 +1,13 @@
 # TicTacToe
+
+<p align="center">
+  <img src="screenshot/homeScreen.jpg" width="200" />
+  <img src="screenshot/gameScreen.jpg" width="200" />
+  <img src="screenshot/gameScreen2.jpg" width="200" />
+  <img src="screenshot/statsScreen.jpg" width="200" />
+</p>
+
+
 ## Intructions [ITA]
 Si chiede di implementare un’app per giocare a tris contro il computer. 
 
