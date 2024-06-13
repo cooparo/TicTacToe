@@ -7,6 +7,7 @@
   <img src="screenshot/statsScreen.jpg" width="200" />
 </p>
 
+A simple and sweet android app to play tic tac toe.
 
 ## Intructions [ITA]
 Si chiede di implementare un’app per giocare a tris contro il computer. 
