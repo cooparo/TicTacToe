@@ -39,6 +39,15 @@ import it.unipd.dei.esp2021.tictactoe.ui.theme.yellow
 import it.unipd.dei.esp2021.tictactoe.utils.WindowInfo
 import it.unipd.dei.esp2021.tictactoe.utils.rememberWindowInfo
 
+/**
+ * Composable function that displays the Game screen.
+ *
+ * The layout of the screen adapts to the available window size, providing
+ * different layouts for compact and expanded screens.
+ *
+ * @param viewModel The [GameViewModel] that provides the game state and handles game logic.
+ * @param onNavigateToHome Callback to be invoked when the user wants to navigate back to the home screen.
+ */
 @Composable
 fun GameScreen(
     viewModel: GameViewModel,
@@ -51,11 +60,17 @@ fun GameScreen(
     } else if (windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact) {
         HorizontalLayout(viewModel = viewModel, onNavigateToHome = onNavigateToHome)
     } else {
+        VerticalLayout(viewModel = viewModel, onNavigateToHome = onNavigateToHome)
         // TODO: big boy (e.g. tablet, ... )
     }
-
 }
 
+/**
+ * Composable function that displays the Tic-Tac-Toe board.
+ *
+ * @param modifier The modifier to be applied to the board layout.
+ * @param viewModel The [GameViewModel] that provides the game state and handles game logic.
+ */
 @Composable
 private fun Board(
     modifier: Modifier = Modifier,
@@ -79,10 +94,16 @@ private fun Board(
                 }
             }
         }
-
     }
 }
 
+/**
+ * Composable function that represents a button on the Tic-Tac-Toe board.
+ *
+ * @param result The current result of the game.
+ * @param box The [Box] that this button represents.
+ * @param onClick Callback to be invoked when the button is clicked.
+ */
 @Composable
 private fun BoardButton(
     result: Result,
@@ -113,6 +134,14 @@ private fun BoardButton(
     }
 }
 
+/**
+ * Composable function that displays the game UI in a vertical layout.
+ *
+ * This layout is used for devices with a compact screen width.
+ *
+ * @param viewModel The [GameViewModel] that provides the game state and handles game logic.
+ * @param onNavigateToHome Callback to be invoked when the user wants to navigate back to the home screen.
+ */
 @Composable
 private fun VerticalLayout(
     viewModel: GameViewModel,
@@ -185,6 +214,14 @@ private fun VerticalLayout(
     }
 }
 
+/**
+ * Composable function that displays the game UI in a horizontal layout.
+ *
+ * This layout is used for devices with a compact screen height.
+ *
+ * @param viewModel The [GameViewModel] that provides the game state and handles game logic.
+ * @param onNavigateToHome Callback to be invoked when the user wants to navigate back to the home screen.
+ */
 @Composable
 fun HorizontalLayout(
     viewModel: GameViewModel,

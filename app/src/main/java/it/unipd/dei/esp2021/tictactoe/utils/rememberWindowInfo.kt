@@ -5,6 +5,14 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * Provides a [WindowInfo] object that contains information about the current window's size.
+ *
+ * The function uses the `LocalConfiguration` to determine the screen width and height in dp,
+ * and then classifies them into [WindowInfo.WindowType] categories (Compact, Medium, Expanded).
+ *
+ * @return A [WindowInfo] object representing the current window's size information.
+ */
 @Composable
 fun rememberWindowInfo(): WindowInfo {
     val configuration = LocalConfiguration.current

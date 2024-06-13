@@ -15,16 +15,29 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
+/**
+ * ViewModel for managing the state and actions of a Tic Tac Toe game.
+ * @property repository The repository for accessing game data.
+ */
 class GameViewModel(
     private val repository: GameRepository
 ) : ViewModel() {
 
+    /**
+     * Represents the current game state.
+     */
     private val _gameState = MutableStateFlow(Game())
     val gameState: StateFlow<Game> = _gameState.asStateFlow()
 
+    /**
+     * Represents the current state of the game board.
+     */
     private val _board = MutableStateFlow(mutableListOf(mutableListOf(Box())))
     val board: StateFlow<MutableList<MutableList<Box>>> = _board.asStateFlow()
 
+    /**
+     * Holds a list of games retrieved from the repository.
+     */
     private lateinit var _gamesList: Flow<List<Game>>
     lateinit var gamesList: Flow<List<Game>>
 
@@ -33,6 +46,9 @@ class GameViewModel(
         this.getGamesList()
     }
 
+    /**
+     * Initializes the game board to a 3x3 grid of empty boxes and resets the game state.
+     */
     fun initGame() {
         var row = 0
         var column: Int
@@ -51,6 +67,11 @@ class GameViewModel(
         _gameState.value = Game()
     }
 
+    /**
+     * Handles the click event on a specific box in the game board.
+     * Updates the board and game state if the box is empty and the game is not ended.
+     * @param box The box that was clicked.
+     */
     fun onClickBox(box: Box) = viewModelScope.launch {
         val currentPlayer: Symbol = _gameState.value.currentPlayer
         val turn: Int = _gameState.value.turn
@@ -71,6 +92,9 @@ class GameViewModel(
         }
     }
 
+    /**
+     * Handles the computer's move by selecting a random empty box on the board and making a move.
+     */
     fun computerMove() = viewModelScope.launch {
         if (!_gameState.value.result.isEnded()) {
             var randomEmptyBox = Box()
@@ -91,15 +115,26 @@ class GameViewModel(
         }
     }
 
+    /**
+     * Called when the game ends to store the game state in the repository.
+     * @param game The game state to store.
+     */
     private fun onEndGame(game: Game) = viewModelScope.launch {
         repository.insert(game)
     }
 
+    /**
+     * Retrieves the list of past games ordered by date from the repository.
+     */
     private fun getGamesList() = viewModelScope.launch {
         _gamesList = repository.allGamesOrderedByDate()
         gamesList = _gamesList
     }
 
+    /**
+     * Checks the current board state to determine the game result.
+     * @return The result of the game, indicating if there's a winner, a draw, or if the game is ongoing.
+     */
     @Suppress("LocalVariableName")
     private fun checkResult(): Result {
         val XhasWon = symbolHasWon(Symbol.SYMBOL_CROSS)
@@ -112,6 +147,12 @@ class GameViewModel(
         else Result.RESULT_ONGOING
     }
 
+    /**
+     * Checks if a specific symbol has won the game by forming a line horizontally, vertically, or diagonally.
+     * @param symbol The symbol to check for a win.
+     * @return True if the specified symbol has won, otherwise false.
+     * @throws IllegalArgumentException if the symbol is empty.
+     */
     private fun symbolHasWon(symbol: Symbol): Boolean {
         if (symbol == Symbol.SYMBOL_EMPTY) throw IllegalArgumentException() // Empty symbol can't win obvs
 
@@ -132,6 +173,10 @@ class GameViewModel(
                 (board[0][2].symbol == symbol && board[1][1].symbol == symbol && board[2][0].symbol == symbol)
     }
 
+    /**
+     * Checks if the board is completely empty.
+     * @return True if the board is empty, otherwise false.
+     */
     private fun isBoardEmpty(): Boolean {
         for (row in board.value) {
             for (box in row) {
@@ -141,6 +186,10 @@ class GameViewModel(
         return true
     }
 
+    /**
+     * Checks if the board is completely full.
+     * @return True if the board is full, otherwise false.
+     */
     private fun isBoardFull(): Boolean {
         for (row in board.value) {
             for (box in row) {

@@ -29,6 +29,12 @@ import it.unipd.dei.esp2021.tictactoe.ui.theme.background
 import it.unipd.dei.esp2021.tictactoe.ui.theme.blue
 import it.unipd.dei.esp2021.tictactoe.ui.theme.green
 
+/**
+ * Composable function that displays the Home screen.
+ *
+ * @param onNavigateToGame Callback to be invoked when the user wants to navigate to the game screen.
+ * @param onNavigateToStats Callback to be invoked when the user wants to navigate to the statistics screen.
+ */
 @Preview(showBackground = true)
 @Composable
 fun HomeScreen(

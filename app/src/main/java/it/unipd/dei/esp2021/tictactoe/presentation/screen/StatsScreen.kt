@@ -1,6 +1,5 @@
 package it.unipd.dei.esp2021.tictactoe.presentation.screen
 
-import android.widget.Space
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,19 +9,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,7 +69,7 @@ val fakeList = listOf(
 fun StatsScreen(
     onNavigateToHome: () -> Unit = {},
     onNavigateToGame: () -> Unit = {},
-    gameList: List<Game> =  fakeList
+    gameList: List<Game> = fakeList
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -145,6 +141,11 @@ fun GameList(
     }
 }
 
+/**
+ * Composable function that displays a row representing a past game.
+ *
+ * @param game The [Game] object to display information about.
+ */
 @Composable
 fun GameRow(
     game: Game = Game(8, Result.RESULT_PLAYER_X, Date().time)
